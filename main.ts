@@ -42,6 +42,15 @@ function validateStory(story) {
   if (story.includes('\n') || story.includes('\r')) {
     throw new Error('Story must not contain newline characters.');
   }
+  // The gate rejects whitespace-only text, so fail loudly here too.
+  if (story.trim().length === 0) {
+    throw new Error('Story must not be only whitespace.');
+  }
+  // No leading or trailing spaces: the judge reads the file exactly,
+  // so stray padding would be part of the entry.
+  if (story !== story.trim()) {
+    throw new Error('Story must not start or end with whitespace.');
+  }
   // Split on a sentence terminator followed by whitespace: exactly
   // two sentences, each ending in . ! or ?, nothing else.
   const sentences = story.split(/(?<=[.!?])\s+/);
